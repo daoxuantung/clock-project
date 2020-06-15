@@ -1,0 +1,51 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  justify-content: center;
+  margin: 50px 0;
+}
+
+.form-group {
+  width: 400px;
+  display: flex;
+}
+
+.form-control {
+  margin-right: 10px;
+}
+
+.btn {
+  width: 150px;
+}
+
+.App-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.clock {
+  width: 400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.clock p {
+  width: 100px;
+  margin: 0;
+}
+
+.button {
+  width: 100px;
+}
+
+.react-clock {
+  margin: auto;
+  margin-bottom: 50px;
+}
