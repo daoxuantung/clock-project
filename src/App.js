@@ -15,8 +15,8 @@ class App extends Component {
       date: new Date()
     };
 
-    this.handleClick = this.handleClick.bind(this);
-    this.containsObject = this.containsObject.bind(this);
+    this.handleFormOnSubmit = this.handleFormOnSubmit.bind(this);
+    this.handleSelectOnChange = this.handleSelectOnChange.bind(this);
     this.removeTime = this.removeTime.bind(this);
   }
 
@@ -25,17 +25,29 @@ class App extends Component {
       const timezones = res.data;
       this.setState({
         cities: JSON.parse(localStorage.getItem("cities")) || [],
-        timezones
+        timezones,
+        itemMatched: timezones[0]
       });
     });
+
+    // localStorage.removeItem("cities");
     setInterval(() => this.setState({ date: new Date() }), 1000);
   }
 
-  async handleClick(event) {
-    let items = JSON.parse(localStorage.getItem("cities")) || [];
-    let value = event.target.parentElement.children[0].value;
-    const res = await axios.get("https://mehpd.sse.codesandbox.io/timezones");
-    const itemMatched = res.data.find(item => item.value === value);
+  handleSelectOnChange(event) {
+    const value = event.target.value;
+    const { timezones } = this.state;
+    const itemMatched = timezones.find(item => item.value === value);
+
+    this.setState({
+      itemMatched
+    });
+  }
+
+  handleFormOnSubmit(event) {
+    event.preventDefault();
+    const items = JSON.parse(localStorage.getItem("cities")) || [];
+    const { itemMatched } = this.state;
 
     if (!items.length) {
       items.push(itemMatched);
@@ -46,8 +58,11 @@ class App extends Component {
       return;
     }
 
-    const bolean = this.containsObject(itemMatched, items)[0];
-    if (bolean) {
+    const indexOfItem = items.findIndex(
+      item => item.value === itemMatched.value
+    );
+
+    if (indexOfItem >= 0) {
       return;
     } else {
       items.push(itemMatched);
@@ -59,53 +74,53 @@ class App extends Component {
     });
   }
 
-  async removeTime(event) {
-    let items = JSON.parse(localStorage.getItem("cities"));
-    let text = event.target.parentElement.children[0].textContent;
-    let value = text.slice(0, text.length - 2);
-    const res = await axios.get("https://mehpd.sse.codesandbox.io/timezones");
-    const itemFinded = res.data.find(item => item.value === value);
-    const index = this.containsObject(itemFinded, items)[1];
-    let itemsRemoved = items.slice(0, index).concat(items.slice(index + 1));
+  removeTime(event) {
+    const items = JSON.parse(localStorage.getItem("cities"));
+    const text = event.target.parentElement.children[0].textContent;
+    const value = text.slice(0, text.length - 2);
+
+    const itemMatched = items.find(item => item.value === value);
+    const indexOfItem = items.findIndex(
+      item => item.value === itemMatched.value
+    );
+
+    const itemsRemoved = items
+      .slice(0, indexOfItem)
+      .concat(items.slice(indexOfItem + 1));
+
     localStorage.setItem("cities", JSON.stringify(itemsRemoved));
+
     this.setState({
       cities: JSON.parse(localStorage.getItem("cities"))
     });
   }
 
-  containsObject(item, items) {
-    for (var i = 0; i < items.length; i++) {
-      if (items[i].name === item.name) {
-        return [true, i];
-      }
-    }
-
-    return false;
-  }
-
   render() {
-    const { cities, timezones } = this.state;
+    const { cities, timezones, date } = this.state;
 
     return (
       <div className="App">
         <h1>Timezones</h1>
-        <Form className="form">
+        <Form
+          className="form"
+          onSubmit={event => this.handleFormOnSubmit(event)}
+        >
           <FormGroup>
-            <Input type="select" name="select">
+            <Input
+              type="select"
+              name="select"
+              onChange={event => this.handleSelectOnChange(event)}
+            >
               {timezones.map((timezone, index) => (
                 <option key={index} value={timezone.value}>
                   {timezone.name}
                 </option>
               ))}
             </Input>
-            <Button color="primary" onClick={this.handleClick}>
-              Add time
-            </Button>
+            <Button color="primary">Add time</Button>
           </FormGroup>
         </Form>
-        <Clock
-          value={this.state.date}
-        />
+        <Clock value={date} />
         <div className="App-clock">
           {cities.map((city, index) => (
             <div key={index} className="clock">
@@ -118,7 +133,7 @@ class App extends Component {
               <Button
                 color="primary"
                 className="button"
-                onClick={this.removeTime}
+                onClick={event => this.removeTime(event)}
               >
                 Delete
               </Button>
