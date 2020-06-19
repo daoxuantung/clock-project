@@ -13,4 +13,6 @@
  
 ## Dependencies
 
-  [React](https://reactjs.org/), [Bootstrap](https://getbootstrap.com/), [Reactstrap](https://reactstrap.github.io/), 
+  1. [React](https://reactjs.org/) 
+  2. [Bootstrap](https://getbootstrap.com/) 
+  3. [Reactstrap](https://reactstrap.github.io/) 
