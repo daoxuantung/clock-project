@@ -4,11 +4,11 @@
 
 ## Installing
 
-  npm install
+  Run npm install to install dependencies for project.
   
 # Running the tests
   
-  Run with npm: npm start
+  Run with npm: npm start.
   Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
  
 ## Dependencies
