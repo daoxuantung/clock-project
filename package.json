@@ -8,7 +8,7 @@
   ],
   "main": "src/index.js",
   "dependencies": {
-    "axios": "0.19.2",
+    "axios": "1.6.0",
     "bootstrap": "4.5.0",
     "eslint": "7.2.0",
     "prettier": "2.0.5",
